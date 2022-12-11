@@ -1,3 +1,5 @@
+the pose detection function result is bad in flutter,so i merge ML-kit-pose(kotlin) code and flutter platform
+
 # project
 
 A new Flutter project.
