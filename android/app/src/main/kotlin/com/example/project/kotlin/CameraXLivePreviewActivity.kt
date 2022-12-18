@@ -52,7 +52,7 @@ import com.example.project.preference.PreferenceUtils
 import com.example.project.preference.SettingsActivity
 import com.example.project.preference.SettingsActivity.LaunchSource
 import java.util.ArrayList
-
+import com.example.project.MainActivity
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
 @RequiresApi(VERSION_CODES.LOLLIPOP)
@@ -74,7 +74,7 @@ class CameraXLivePreviewActivity :
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate")
     if (savedInstanceState != null) {
-      selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, OBJECT_DETECTION)
+      selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, POSE_DETECTION)
     }
     cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
     setContentView(R.layout.activity_vision_camerax_live_preview)
@@ -111,9 +111,7 @@ class CameraXLivePreviewActivity :
 
     val settingsButton = findViewById<ImageView>(R.id.settings_button)
     settingsButton.setOnClickListener {
-      val intent = Intent(applicationContext, SettingsActivity::class.java)
-      intent.putExtra(SettingsActivity.EXTRA_LAUNCH_SOURCE, LaunchSource.CAMERAX_LIVE_PREVIEW)
-      startActivity(intent)
+      startActivity(Intent(this@CameraXLivePreviewActivity,SettingsActivity::class.java))
     }
   }
 
@@ -246,7 +244,7 @@ class CameraXLivePreviewActivity :
           else -> throw IllegalStateException("Invalid model name")
         }
       } catch (e: Exception) {
-        Log.e(TAG, "Can not create image processor: $selectedModel", e)
+        //Log.e(TAG, "Can not create image processor: $selectedModel", e)
         Toast.makeText(
             applicationContext,
             "Can not create image processor: " + e.localizedMessage,

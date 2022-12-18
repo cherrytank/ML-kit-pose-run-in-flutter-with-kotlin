@@ -54,7 +54,7 @@ public class GraphicOverlay extends View {
   private final List<Graphic> graphics = new ArrayList<>();
   // Matrix for transforming from image coordinates to overlay view coordinates.
   private final Matrix transformationMatrix = new Matrix();
-
+  //input size
   private int imageWidth;
   private int imageHeight;
   // The factor of overlay View size to image size. Anything in the image coordinates need to be

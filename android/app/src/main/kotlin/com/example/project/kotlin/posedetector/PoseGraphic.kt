@@ -15,7 +15,6 @@
  */
 
 package com.example.project.kotlin.posedetector
-
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -26,16 +25,18 @@ import com.google.mlkit.vision.pose.PoseLandmark
 import java.lang.Math.max
 import java.lang.Math.min
 import java.util.Locale
-
 /** Draw the detected pose in preview. */
+
+
+
 class PoseGraphic
 internal constructor(
-    overlay: GraphicOverlay,
-    private val pose: Pose,
-    private val showInFrameLikelihood: Boolean,
-    private val visualizeZ: Boolean,
-    private val rescaleZForVisualization: Boolean,
-    private val poseClassification: List<String>
+  overlay: GraphicOverlay,
+  private val pose: Pose,
+  private val showInFrameLikelihood: Boolean,
+  private val visualizeZ: Boolean,
+  private val rescaleZForVisualization: Boolean,
+  private val poseClassification: List<String>
 ) : Graphic(overlay) {
   private var zMin = java.lang.Float.MAX_VALUE
   private var zMax = java.lang.Float.MIN_VALUE
@@ -43,6 +44,8 @@ internal constructor(
   private val leftPaint: Paint
   private val rightPaint: Paint
   private val whitePaint: Paint
+
+
 
   init {
     classificationTextPaint = Paint()
@@ -90,7 +93,6 @@ internal constructor(
         zMax = max(zMax, landmark.position3D.z)
       }
     }
-
     val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
     val lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
     val lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
@@ -102,7 +104,6 @@ internal constructor(
     val rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
     val leftMouth = pose.getPoseLandmark(PoseLandmark.LEFT_MOUTH)
     val rightMouth = pose.getPoseLandmark(PoseLandmark.RIGHT_MOUTH)
-
     val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
     val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
     val leftElbow = pose.getPoseLandmark(PoseLandmark.LEFT_ELBOW)
@@ -115,7 +116,6 @@ internal constructor(
     val rightKnee = pose.getPoseLandmark(PoseLandmark.RIGHT_KNEE)
     val leftAnkle = pose.getPoseLandmark(PoseLandmark.LEFT_ANKLE)
     val rightAnkle = pose.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)
-
     val leftPinky = pose.getPoseLandmark(PoseLandmark.LEFT_PINKY)
     val rightPinky = pose.getPoseLandmark(PoseLandmark.RIGHT_PINKY)
     val leftIndex = pose.getPoseLandmark(PoseLandmark.LEFT_INDEX)
@@ -127,6 +127,32 @@ internal constructor(
     val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
     val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
+
+      //Pose Output Format (COCO)
+      val datalist = listOf<Float>(
+        nose?.position!!.x, nose.position.y,nose.inFrameLikelihood,//0
+        (rightShoulder?.position!!.x+leftShoulder?.position!!.x)/2,(rightShoulder.position.y+leftShoulder.position.y)/2,
+        (rightShoulder.inFrameLikelihood+leftShoulder.inFrameLikelihood)/2,//1
+        rightShoulder.position.x,rightShoulder.position.y,rightShoulder.inFrameLikelihood,//2
+        rightElbow?.position!!.x,rightElbow.position.y,rightElbow.inFrameLikelihood,//3
+        rightWrist?.position!!.x,rightWrist.position.y,rightWrist.inFrameLikelihood,//4
+        leftShoulder.position.x,leftShoulder.position.y,leftShoulder.inFrameLikelihood,//5
+        leftElbow?.position!!.x,leftElbow.position.y,leftElbow.inFrameLikelihood,//6
+        leftWrist?.position!!.x,leftWrist.position.y,leftWrist.inFrameLikelihood,//7
+        rightHip?.position!!.x,rightHip.position.y,rightHip.inFrameLikelihood,//8
+        rightKnee?.position!!.x,rightKnee.position.y,rightKnee.inFrameLikelihood,//9
+        rightAnkle?.position!!.x,rightAnkle.position.y,rightAnkle.inFrameLikelihood,//10
+        leftHip?.position!!.x,leftHip.position.y,leftHip.inFrameLikelihood,//11
+        leftKnee?.position!!.x,leftKnee.position.y,leftKnee.inFrameLikelihood,//12
+        leftAnkle?.position!!.x,leftAnkle.position.y,leftAnkle.inFrameLikelihood,//13
+        rightEye?.position!!.x,rightEye.position.y,rightEye.inFrameLikelihood,//14
+        lefyEye?.position!!.x,lefyEye.position.y,lefyEye.inFrameLikelihood,//15
+        rightEar?.position!!.x,rightEar.position.y,rightEar.inFrameLikelihood,//16
+        leftEar?.position!!.x,leftEar.position.y,leftEar.inFrameLikelihood,//17
+      )
+    changedata(datalist)
+
+
     // Face
     drawLine(canvas, nose, lefyEyeInner, whitePaint)
     drawLine(canvas, lefyEyeInner, lefyEye, whitePaint)
@@ -137,10 +163,8 @@ internal constructor(
     drawLine(canvas, rightEye, rightEyeOuter, whitePaint)
     drawLine(canvas, rightEyeOuter, rightEar, whitePaint)
     drawLine(canvas, leftMouth, rightMouth, whitePaint)
-
     drawLine(canvas, leftShoulder, rightShoulder, whitePaint)
     drawLine(canvas, leftHip, rightHip, whitePaint)
-
     // Left body
     drawLine(canvas, leftShoulder, leftElbow, leftPaint)
     drawLine(canvas, leftElbow, leftWrist, leftPaint)
@@ -153,7 +177,6 @@ internal constructor(
     drawLine(canvas, leftIndex, leftPinky, leftPaint)
     drawLine(canvas, leftAnkle, leftHeel, leftPaint)
     drawLine(canvas, leftHeel, leftFootIndex, leftPaint)
-
     // Right body
     drawLine(canvas, rightShoulder, rightElbow, rightPaint)
     drawLine(canvas, rightElbow, rightWrist, rightPaint)
@@ -225,10 +248,22 @@ internal constructor(
   }
 
   companion object {
-
+    var dataR = listOf<Float>()
+    lateinit var dataRe:List<Float>
     private val DOT_RADIUS = 8.0f
     private val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f
     private val STROKE_WIDTH = 10.0f
     private val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
+
+    fun changedata(data:List<Float>){
+      dataR = dataR + data
+    }
+    fun getdata():List<Float>{
+      return dataR
+    }
+    fun redata(){
+      dataR= listOf<Float>()
+    }
   }
 }
+
